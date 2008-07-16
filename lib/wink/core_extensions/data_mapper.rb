@@ -14,12 +14,4 @@ class DataMapper::Database #:nodoc:
     end
   end
 
-  def create_logger
-    logger = Logger.new(Wink.log_stream)
-    # jimmy: Perhaps the next line should happen elsewhere
-    logger.level = Logger::DEBUG if Wink.development?
-    logger.datetime_format = ''
-    logger
-  end
-
 end
