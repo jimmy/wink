@@ -397,7 +397,7 @@ private
 
   # Should comments be checked with Akismet before saved?
   def akismet?
-    Wink.akismet_key && (production? || Wink.akismet_always)
+    Wink.akismet_key && (Wink.production? || Wink.akismet_always)
   end
 
   # Send an Akismet request with parameters from the receiver's model. Return

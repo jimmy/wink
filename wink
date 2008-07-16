@@ -12,14 +12,14 @@ end
 require 'rubygems'
 require 'wink'
 
-Wink.run! 'wink.conf' unless reloading?
+Wink.run! 'wink.conf' unless Wink.reloading?
 
 
 # Reloading =================================================================
 
-if development?
+if Wink.development?
 
-  unless reloading?
+  unless Wink.reloading?
 
     # this is the initial load of this file. set our UNLOADING constant
     # to an array of names to remove before each reload.

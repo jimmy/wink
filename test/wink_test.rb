@@ -66,3 +66,19 @@ describe 'Wink' do
   end
 
 end
+
+describe 'Wink environment methods' do
+  
+  [ :environment, :production?, :development?, :reloading? ].each do |meth|
+    it "responds to :#{meth}" do
+      Wink.should.respond_to meth
+    end
+  end
+
+  it 'responds with the Sinatra environment when sent :environment' do
+    Wink.environment.should.not.be.nil
+    Wink.environment.should.equal Sinatra.application.options.env.to_sym
+    Wink.environment.should.be == :test
+  end
+
+end

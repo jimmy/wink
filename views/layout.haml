@@ -9,7 +9,7 @@
     = feed wink.linkings_url + 'feed', "Linkings"
     = feed '/comments/feed', "Comments (Experimental)"
     = css "wink"
-    - if development?
+    - if Wink.development?
       = script 'jquery-1.2.3'
     - else
       = script 'http://code.jquery.com/jquery-1.2.3.js'

@@ -5,7 +5,7 @@ require 'wink/schema'
 # Tell Sinatra to not automatically start a server.
 set :run, false
 
-unless reloading?
+unless Wink.reloading?
 
   # The site's root URL. Note: the trailing slash should be 
   # omitted when setting this option.
