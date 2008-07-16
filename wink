@@ -17,28 +17,7 @@ Wink.run! 'wink.conf' unless Wink.reloading?
 
 # Reloading =================================================================
 
-if Wink.development?
-
-  unless Wink.reloading?
-
-    # this is the initial load of this file. set our UNLOADING constant
-    # to an array of names to remove before each reload.
-    UNLOAD = %w[Entry Article Bookmark Comment Tag Tagging]
-
-  else
-
-    # remove all constants that we redefine in wink.rb
-    UNLOAD.each do |const_name|
-      begin
-        klass = Object.const_get(const_name)
-        klass.destroy! if klass.respond_to?(:destroy!)
-        Object.send :remove_const, const_name
-      rescue => boom
-        STDERR.puts "error unloading constant: #{const_name}"
-      end
-    end
-
-    Wink.send :remove_const, 'VERSION'
+if Wink.development? && Wink.reloading?
 
     # We also remove DataMapper's schema cache and subclass tracking since it keeps
     # references to the class objects we've removed above. This ensures that old
@@ -46,12 +25,12 @@ if Wink.development?
     DataMapper::Database[:default].adapter.instance_variable_set(:@schema, nil)
     DataMapper::Persistence.subclasses.clear
 
+    Wink.send :remove_const, 'VERSION'
+
     # reload all wink sources.
     load 'wink.rb'
     load 'wink.conf'
-    load 'wink/models.rb'
+    Model.reload_all
     load 'wink/web.rb'
-
-  end
 
 end
