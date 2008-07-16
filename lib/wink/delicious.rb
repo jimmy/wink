@@ -116,39 +116,3 @@ module Wink
   end
 
 end
-
-
-if $0 == __FILE__
-
-  require 'test/unit/assertions'
-  include Test::Unit::Assertions
-
-  delicious =
-    Delicious::Synchronization.new :user => 'test',
-      :password => 'test',
-      :cache => 'bookmarks.xml'
-
-  assert_not_nil delicious.user
-  assert_not_nil delicious.password
-  assert_not_nil delicious.cache
-
-  updated = Time.iso8601("2008-04-03T12:57:15Z")
-
-  assert delicious.last_updated_at.utc?, "should be UTC"
-  assert_equal updated, delicious.last_updated_at
-
-  delicious.synchronize :since => updated do |bookmark|
-    flunk "should not yield when up to date"
-  end
-
-  count = 0
-  delicious.synchronize :since => Time.iso8601("2008-04-02T13:33:50Z") do |bookmark|
-    count += 1
-    [ :shared, :tags, :description, :extended, :time, :href, :hash ].each do |key|
-      assert_not_nil bookmark[key], "#{key.inspect} should be set"
-    end
-    assert bookmark[:tags].length > 0, "should be some tags"
-  end
-  assert_equal 5, count
-
-end
