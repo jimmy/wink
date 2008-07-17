@@ -51,7 +51,6 @@ class Test::Unit::TestCase
 
 end
 
-
 class Object
   def truthful?
     !!self

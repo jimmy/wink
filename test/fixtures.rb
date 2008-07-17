@@ -1,4 +1,3 @@
-
 class Test::Unit::TestCase
 
   def read_file_from_pepys_diary(date)
