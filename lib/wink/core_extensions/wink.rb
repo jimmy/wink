@@ -7,7 +7,7 @@ module Wink
   # The running environment as a Symbol; obtained from Sinatra's
   # application options.
   def environment
-    Sinatra.application.options.env.to_sym
+    Sinatra.env.to_sym
   end
   
   # Are we currently running under the production environment?
