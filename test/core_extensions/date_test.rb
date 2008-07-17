@@ -1,4 +1,4 @@
-require 'help'
+require 'wink/core_extensions/date'
 
 describe 'Date' do
 

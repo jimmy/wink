@@ -1,5 +1,8 @@
-require 'help'
+require 'lib/wink/core_extensions'
 
+# Some of the Time/DateTime/Date methods required are defined in
+# data_objects-0.2.0 (but not in data_objects-0.9.2).  data_objects-0.2.0 is
+# required by do_mysql-0.2.4 which is required by data_mapper-0.2.5.
 describe 'Time' do
 
   it 'responds to #to_datetime' do

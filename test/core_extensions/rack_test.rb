@@ -1,4 +1,4 @@
-require 'help'
+require 'wink/core_extensions/rack'
 
 describe 'Rack::Request#remote_ip' do
 
