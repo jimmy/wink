@@ -9,8 +9,8 @@ class DataMapper::Database #:nodoc:
 
   class Logger < ::Logger
     def format_message(sev, date, message, progname)
-      message = progname if message.blank?
-      "#{message}\n"
+      message_to_log = !message.blank? ? message : progname
+      "#{message_to_log}\n"
     end
   end
 
