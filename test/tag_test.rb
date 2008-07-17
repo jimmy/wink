@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + "/help"
+require 'help'
 require 'fixtures'
 
 describe 'Tag' do

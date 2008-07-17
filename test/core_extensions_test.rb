@@ -1,6 +1,4 @@
-require File.dirname(__FILE__) + "/help"
-require 'fixtures'
-require 'wink/core_extensions'
+require 'help'
 
 describe 'DateTime' do
 

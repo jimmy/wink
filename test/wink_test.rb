@@ -1,6 +1,4 @@
-require File.dirname(__FILE__) + "/help"
-require 'wink'
-require 'data_mapper'
+require 'help'
 
 describe 'Wink' do
 

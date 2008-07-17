@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + "/help"
-require 'wink'
+require 'help'
 
 context 'Wink::Akismet' do
 

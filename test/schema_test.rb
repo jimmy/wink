@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + "/help"
-require 'wink/schema'
+require 'help'
 
 describe 'Wink::Schema' do
 

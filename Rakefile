@@ -4,12 +4,12 @@ task :default => :test
 
 desc 'Run tests'
 task :test do
-  sh "testrb test/*_test.rb"
+  sh 'testrb -Ilib:test test/*test.rb'
 end
 
 desc 'Run specs'
 task :spec do
-  sh "specrb -s test/*_test.rb"
+  sh 'specrb -Ilib:test -s test/*test.rb'
 end
 
 desc 'Start a development server'

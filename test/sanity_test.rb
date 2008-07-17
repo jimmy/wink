@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + "/help"
+require 'help'
 
 describe 'String' do
 
