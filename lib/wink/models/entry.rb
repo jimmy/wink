@@ -1,30 +1,29 @@
 class Entry
-  include DataMapper::Persistence
+  include DataMapper::Resource
 
-  property :id, :integer, :serial => true
-  property :slug, :string, :size => 255, :nullable => false, :index => :unique
-  property :type, :class, :nullable => false, :index => true
-  property :published, :boolean, :default => false
-  property :title, :string, :size => 255, :nullable => false
-  property :summary, :text, :lazy => false
-  property :filter, :string, :size => 20, :default => 'markdown'
-  property :url, :string, :size => 255
-  property :created_at, :datetime, :nullable => false, :index => true
-  property :updated_at, :datetime, :nullable => false
-  property :body, :text
+  property :id,         Serial
+  property :slug,       String,        :size => 255, :nullable => false, :index => :unique
+  property :class_type, Discriminator, :index => true
+  property :published,  Boolean,       :default => false
+  property :title,      String,        :size => 255, :nullable => false
+  property :summary,    Text,          :lazy => false
+  property :filter,     String,        :size => 20, :default => 'markdown'
+  property :url,        String,        :size => 255
+  property :created_at, DateTime,      :index => true
+  property :updated_at, DateTime
+  property :body,       Text
 
-  validates_presence_of :title, :slug, :filter
+  validates_present :title, :slug, :filter
 
-  has_many :comments,
+  has n, :comments,
     :spam.not => true,
-    :order => 'created_at ASC'
+    :order => [:created_at.asc]
 
-  has_and_belongs_to_many :tags,
-    :join_table => 'taggings'
+  has n, :tags, :through => Resource
 
   def initialize(attributes={})
-    @created_at = DateTime.now
-    @filter = 'markdown'
+    self[:created_at] = DateTime.now
+    self[:filter] = 'markdown'
     super
     yield self if block_given?
   end
@@ -45,12 +44,12 @@ class Entry
 
   def created_at=(value)
     value = value.to_datetime if value.respond_to?(:to_datetime)
-    @created_at = value
+    self[:created_at] = value
   end
 
   def updated_at=(value)
     value = value.to_datetime if value.respond_to?(:to_datetime)
-    @updated_at = value
+    self[:updated_at] = value
   end
 
   def published?
@@ -60,12 +59,12 @@ class Entry
   def published=(value)
     value = ! ['false', 'no', '0', ''].include?(value.to_s)
     self.created_at = self.updated_at = DateTime.now if value && draft? && !new_record?
-    @published = value
+    self[:published] = value
   end
 
   def publish!
     self.published = true
-    save
+    save!
   end
 
   def draft?
@@ -95,13 +94,13 @@ class Entry
   end
 
   def self.published(options={})
-    options = { :order => 'created_at DESC', :published => true }.
+    options = { :order => [:created_at.desc], :published => true }.
       merge(options)
     all(options)
   end
 
   def self.drafts(options={})
-    options = { :order => 'created_at DESC', :published => false }.
+    options = { :order => [:created_at.desc], :published => false }.
       merge(options)
     all(options)
   end
@@ -110,45 +109,20 @@ class Entry
     options = {
       :created_at.gte => Date.new(year, 1, 1),
       :created_at.lt => Date.new(year + 1, 1, 1),
-      :order => 'created_at ASC'
+      :order => [:created_at.asc]
     }.merge(options)
     published(options)
-  end
-
-  def self.tagged(tag, options={})
-    if tag = Tag.first(:name => tag)
-      tag.entries
-    else
-      []
-    end
   end
 
   # The most recently published Entry (or specific subclass when called on
   # Article, Bookmark, or other Entry subclass).
   def self.latest(options={})
-    first({ :order => 'created_at DESC', :published => true }.merge(options))
-  end
-
-  # XXX The following two methods shouldn't be necessary but DM isn't adding
-  # the type condition.
-
-  def self.first(options={}) #:nodoc:
-    return super if self == Entry
-    options = { :type => ([self] + self::subclasses.to_a) }.
-      merge(options)
-    super(options)
-  end
-
-  def self.all(options={}) #:nodoc:
-    return super if self == Entry
-    options = { :type => ([self] + self::subclasses.to_a) }.
-      merge(options)
-    super(options)
+    first({ :order => [:created_at.desc], :published => true }.merge(options))
   end
 
   # XXX neither ::create or ::create! pass the block parameter to ::new so
   # we need to override to fix that.
-
+  # TODO: consider moving these next two methods into core_extensions/data_mapper
   def self::create(attributes={}, &block) #:nodoc:
     instance = new(attributes, &block)
     instance.save
@@ -156,8 +130,8 @@ class Entry
   end
 
   def self::create!(attributes={}, &block) #:nodoc:
-    instance = create(attributes, &block)
-    raise DataMapper::InvalidRecord, instance if instance.errors.any?
+    instance = new(attributes, &block)
+    instance.save!
     instance
   end
 

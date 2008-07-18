@@ -11,30 +11,26 @@ module Wink
     # DataMapper::Database::setup but guards against Sinatra reloading.
     def configure(options)
       return if Wink.reloading?
-      DataMapper::Database.setup default_database_logger_config.merge(options)
+      DataMapper.setup :default, default_database_logger_config.merge(options)
     end
 
+    # TODO: port the ability to set the log_stream and log_level
+    # this might help: DataObjects::Sqlite3.logger = DataObjects::Logger.new(STDOUT, 0) 
     def default_database_logger_config
       {
-        :log_stream => Wink.log_stream,
-        :log_level  => Wink.development? ? Logger::DEBUG : Logger::WARN
+    #    :log_stream => Wink.log_stream,
+    #    :log_level => 0
       }
     end
 
+    # TODO: update this comment
     # Create the database schema using the current default DataMapper
     # database. When the :force option is true, drop the table (if it exists)
     # before creating. An exception is raised when :force is false (default) and
     # tables already exist.
-    def create!(options={})
-      force = !! options[:force]
-      model_classes.each { |model| model.table.create!(force) }
+    def reset!(options={})
+      DataMapper.auto_migrate!
       create_welcome_entry! if options[:welcome]
-      true
-    end
-
-    # Drop all Wink tables from the current default DataMapper database.
-    def drop!
-      model_classes.each { |model| model.table.drop! }
       true
     end
 
@@ -56,24 +52,15 @@ module Wink
     # Remove the welcome entry.
     def remove_welcome_entry!
       if article = Article.first(:slug => 'welcome')
-        article.destroy!
+        article.destroy
         true
       end
     end
-
-  private
-
-    # All model classes that have corresponding tables (i.e., STI subclasses
-    # are not included).
-    def model_classes
-      require 'wink/models'
-      @model_classes ||= [ Entry, Comment, Tag, Tagging ].freeze
-    end
-
   end
 
 end
 
+# TODO: clean this up
 # DEPRECATED: The top-level Database constant will be removed before the next
 # release.
 Database = Wink::Schema

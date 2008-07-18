@@ -7,12 +7,9 @@ describe 'Wink::Schema' do
     @schema = Wink::Schema
   }
 
-  after(:each)  { teardown_database }
-
-  it 'responds to ::configure, ::create!, and ::drop!' do
+  it 'responds to ::configure and ::reset!' do
     @schema.should.respond_to :configure
-    @schema.should.respond_to :create!
-    @schema.should.respond_to :drop!
+    @schema.should.respond_to :reset!
   end
 
   it 'creates a welcome entry ...' do
@@ -40,10 +37,9 @@ describe 'Database (DEPRECATED)' do
     Object.const_defined?(:Database).should.be.truthful
   end
 
-  it 'responds to ::configure, ::create!, and ::drop!' do
+  it 'responds to ::configure and ::reset!' do
     Database.should.respond_to :configure
-    Database.should.respond_to :create!
-    Database.should.respond_to :drop!
+    Database.should.respond_to :reset!
   end
 
 end

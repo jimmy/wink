@@ -8,8 +8,6 @@ describe 'Comment' do
     @entry = Entry.create! :slug => 'comment-test', :title => 'Comment Test'
   end
 
-  after(:each)  { teardown_database }
-
   it 'finds no comments when none exist' do
     Comment.all.length.should.be 0
   end

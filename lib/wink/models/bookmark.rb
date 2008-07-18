@@ -62,4 +62,13 @@ class Bookmark < Entry
     latest && latest.created_at
   end
 
+  # this is almost identical to Article.tagged
+  def self.tagged(tag_name)
+    if tag = Tag[tag_name]
+      tag.published_bookmarks
+    else
+      []
+    end
+  end
+
 end

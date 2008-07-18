@@ -1,17 +1,25 @@
-# datamapper-0.2.5 is incompatible with do_mysql-0.9.2
-gem 'do_mysql', '=0.2.4'
-require 'do_mysql'
+gem 'dm-core', '=0.9.2'
+require 'dm-core'
 
-gem 'datamapper', '=0.2.5'
-require 'data_mapper'
+module DataMapper::Resource
+  alias [] attribute_get
+  alias []= attribute_set
 
-class DataMapper::Database #:nodoc:
-
-  class Logger < ::Logger
-    def format_message(sev, date, message, progname)
-      message_to_log = !message.blank? ? message : progname
-      "#{message_to_log}\n"
+  module ClassMethods
+    def find_or_create(options)
+      first(options.dup) || create(options.dup)
     end
   end
-
 end
+
+# TODO: This was used with datamapper-0.2.5.  Port if necessary.
+#class DataMapper::Database #:nodoc:
+#
+#  class Logger < ::Logger
+#    def format_message(sev, date, message, progname)
+#      message_to_log = !message.blank? ? message : progname
+#      "#{message_to_log}\n"
+#    end
+#  end
+#
+#end

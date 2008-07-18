@@ -239,18 +239,8 @@ get Wink.archive_url + ':year/' do
 end
 
 get Wink.tag_url + ':tag' do
-  @title = "Regarding: '#{h(params[:tag].to_s.upcase)}'"
-  @entries = Entry.tagged(params[:tag])
-  @entries.reject! { |e| e.draft? }
-  @entries.sort! do |b,a|
-    if a.is_a?(Bookmark) && !b.is_a?(Bookmark)
-      -1
-    elsif b.is_a?(Bookmark) && !a.is_a?(Bookmark)
-      1
-    else
-      a.created_at <=> b.created_at
-    end
-  end
+  @title = "Regarding: '#{h(params[:tag].upcase)}'"
+  @entries = Article.tagged(params[:tag]) + Bookmark.tagged(params[:tag])
   haml :home
 end
 

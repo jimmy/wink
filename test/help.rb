@@ -15,7 +15,7 @@ require 'sinatra/test/unit'
 require 'sinatra/test/spec'
 
 # Use SQLite3 for now
-gem 'do_sqlite3', '=0.2.5'
+gem 'do_sqlite3', '=0.9.2'
 require 'do_sqlite3'
 
 Database.configure \
@@ -26,17 +26,13 @@ Wink.configure do
   set :env, :test
   set :url, 'http://test.local'
   set :author, 'John Doe'
-  set :log_stream, File.open('test.log', 'wb')
+#  set :log_stream, File.open('test.log', 'a')
 end
 
 class Test::Unit::TestCase
 
   def setup_database
-    Database.create! :force => true
-  end
-
-  def teardown_database
-    Database.drop!
+    Database.reset!
   end
 
   # Assert that the given constant is defined. The const_name may include

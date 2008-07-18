@@ -4,7 +4,6 @@ require 'fixtures'
 describe 'Tag' do
 
   before(:each) { setup_database }
-  after(:each)  { teardown_database }
 
   it 'finds no tags when none exist' do
     Tag.all.length.should.equal 0

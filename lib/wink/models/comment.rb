@@ -1,33 +1,33 @@
 class Comment
-  include DataMapper::Persistence
+  include DataMapper::Resource
 
-  property :id, :integer, :serial => true
-  property :author, :string, :size => 80
-  property :ip, :string, :size => 50
-  property :url, :string, :size => 255
-  property :body, :text, :nullable => false, :lazy => false
-  property :created_at, :datetime, :nullable => false, :index => true
-  property :referrer, :string, :size => 255
-  property :user_agent, :string, :size => 255
-  property :checked, :boolean, :default => false
-  property :spam, :boolean, :default => false, :index => true
+  property :id,         Serial
+  property :author,     String,   :size => 80
+  property :ip,         String,   :size => 50
+  property :url,        String,   :size => 255
+  property :body,       Text,     :nullable => false, :lazy => false
+  property :created_at, DateTime, :index => true
+  property :referrer,   String,   :size => 255
+  property :user_agent, String,   :size => 255
+  property :checked,    Boolean,  :default => false
+  property :spam,       Boolean,  :default => false, :index => true
+  property :entry_id,   Integer,  :index => true
 
   belongs_to :entry
-  index [ :entry_id ]
 
-  validates_presence_of :body, :entry_id
+  validates_present :body, :entry_id
 
-  before_create do |comment|
-    comment.check
+  before :create do
+    check
     true
   end
 
   def self.ham(options={})
-    all({:spam.not => true, :order => 'created_at DESC'}.merge(options))
+    all({:spam.not => true, :order => [:created_at.desc]}.merge(options))
   end
 
   def self.spam(options={})
-    all({:spam => true, :order => 'created_at DESC'}.merge(options))
+    all({:spam => true, :order => [:created_at.desc]}.merge(options))
   end
 
   def excerpt(length=65)
@@ -37,15 +37,16 @@ class Comment
   def body=(text)
     # the first sub autolinks URLs when on line by itself; the second sub
     # disables escapes markdown's headings when followed by a number.
-    @body = text.to_s
-    @body.gsub!(/^https?:\/\/\S+$/, '<\&>')
-    @body.gsub!(/^(\s*)(#\d+)/) { [$1, "\\", $2].join }
-    @body.gsub!(/\r/, '')
+    body = text.to_s.dup
+    body.gsub!(/^https?:\/\/\S+$/, '<\&>')
+    body.gsub!(/^(\s*)(#\d+)/) { [$1, "\\", $2].join }
+    body.gsub!(/\r/, '')
+    self[:body] = body
   end
 
-  def url
-    # TODO move this kind of logic into the setter
-    @url.strip unless @url.to_s.strip.blank?
+  def url=(url)
+    stripped_url = url.strip
+    self[:url] = stripped_url.blank? ? url : stripped_url
   end
 
   def author_link
@@ -62,22 +63,22 @@ class Comment
   end
 
   def author
-    if @author.blank?
+    if self[:author].blank?
       'Anonymous Coward'
     else
-      @author
+      self[:author]
     end
   end
 
   # Check the comment with Akismet. The spam attribute is updated to reflect
   # whether the spam was detected or not.
   def check
-    return true if @checked
-    @checked = true
-    @spam = blacklisted? || akismet(:check) || false
+    return true if self[:checked]
+    self[:checked] = true
+    self[:spam] = blacklisted? || akismet(:check) || false
   rescue => boom
     logger.error "An error occured while connecting to Akismet: #{boom.to_s}"
-    @checked = false
+    self[:checked] = false
   end
 
   # Check the comment with Akismet and immediately save the comment.
@@ -99,7 +100,8 @@ class Comment
   # Mark this comment as Spam and immediately save the comment. If Akismet is
   # enabled, the comment is submitted as spam.
   def spam!
-    @checked = @spam = true
+    self[:checked] = true
+    self[:spam] = true
     akismet :spam!
     save
   end
@@ -113,7 +115,8 @@ class Comment
   # Mark this comment as Ham and immediately save the comment. If Akismet is
   # enabled, the comment is submitted as Ham.
   def ham!
-    @checked, @spam = true, false
+    self[:checked] = true
+    self[:spam] = false
     akismet :ham!
     save
   end

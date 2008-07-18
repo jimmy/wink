@@ -12,11 +12,11 @@ describe 'Wink' do
     Wink::VERSION.should.be.kind_of String
   end
 
-  %w[Entry Article Bookmark Tag Tagging Comment].each do |class_name|
+  %w[Entry Article Bookmark Tag EntryTag Comment].each do |class_name|
     it "defines #{class_name} model at the top level" do
       Object.should.const_defined class_name
       Object.const_get(class_name).should.not.be.nil
-      Object.const_get(class_name).should < DataMapper::Persistence
+      Object.const_get(class_name).should < DataMapper::Resource
     end
   end
 

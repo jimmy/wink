@@ -9,3 +9,15 @@ class DateTime #:nodoc:
     "#<DateTime: #{to_s}>"
   end
 end
+
+# http://www.rubyweeklynews.org/20051120
+class DateTime
+  # TODO: make sure we need this method
+  def to_time
+    Time.mktime(year, mon, day, hour, min, sec)
+  end
+
+  def to_date
+    Date.new(year, mon, day)
+  end
+end
