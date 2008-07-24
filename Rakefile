@@ -5,5 +5,5 @@ task :test do
 end
 
 task :rcov do
-  sh 'rcov -Ilib ' + FileList['test/**/*test.rb'].join(' ')
+  sh 'rcov -t -Ilib ' + FileList['test/**/*test.rb'].join(' ')
 end
