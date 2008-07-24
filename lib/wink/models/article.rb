@@ -38,4 +38,10 @@ class Article
     end
   end
 
+  def self.circa(year, options={})
+    with_scope(:published_at => Date.new(year)..Date.new(year+1)) do
+      all({:order => [:published_at.asc]}.merge(options))
+    end
+  end
+
 end

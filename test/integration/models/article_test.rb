@@ -59,13 +59,13 @@ context 'Article: custom finders' do
     # create 8 drafts
     8.times do |i|
       article = Article.create!(:slug => i, :title => i)
-      article.created_at = DateTime.now + i
+      article.created_at = DateTime.parse("2008-01-01") + i
       article.save
     end
 
     # publish 4 of articles
     Article.all(:limit => 4).each_with_index do |article, index|
-      article.published_at = DateTime.now + index
+      article.published_at = DateTime.parse("2008-01-01") + index
       article.save
     end
   end
@@ -98,4 +98,22 @@ context 'Article: custom finders' do
     created_ats.should == created_ats.sort
   end
 
+  specify 'circa should only return articles from the given year' do
+    Article.create!(:slug => '2009', :title => '2009', :published_at => DateTime.parse("2009-01-01"))
+    Article.circa(2008).should.be.all{ |article| article.published_at.year == 2008 }
+  end
+
+  specify 'circa should only return published articles' do
+    Article.circa(2008).should.be.all{ |article| article.published? }
+  end
+
+  specify 'circa should be ordered by published_at' do
+    published_ats = Article.circa(2008).map{ |article| article.published_at }
+    published_ats.should == published_ats.sort
+  end
+
+  specify 'circa should merge options' do
+    created_ats = Article.circa(2008, :order => [:created_at]).map{ |article| article.created_at }
+    created_ats.should == created_ats.sort
+  end
 end

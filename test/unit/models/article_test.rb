@@ -124,4 +124,6 @@ Expectations do
 
   expect Article.to.be.respond_to?(:drafts)
 
+  expect Article.to.be.respond_to?(:circa)
+
 end
