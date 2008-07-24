@@ -26,4 +26,16 @@ class Article
     ! published?
   end
 
+  def self.published(options={})
+    with_scope(:published_at.not => nil) do
+      all({:order => [:published_at.desc]}.merge(options))
+    end
+  end
+
+  def self.drafts(options={})
+    with_scope(:published_at => nil) do
+      all({:order => [:created_at.desc]}.merge(options))
+    end
+  end
+
 end

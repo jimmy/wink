@@ -50,3 +50,52 @@ context 'Article' do
   end
 
 end
+
+context 'Article: custom finders' do
+
+  setup do
+    Wink::Schema.reset!
+
+    # create 8 drafts
+    8.times do |i|
+      article = Article.create!(:slug => i, :title => i)
+      article.created_at = DateTime.now + i
+      article.save
+    end
+
+    # publish 4 of articles
+    Article.all(:limit => 4).each_with_index do |article, index|
+      article.published_at = DateTime.now + index
+      article.save
+    end
+  end
+
+  specify 'published should only return published articles' do
+    Article.published.should.be.all{ |article| article.published? }
+  end
+
+  specify 'published should be ordered by published_at desc' do
+    published_ats = Article.published.map{ |article| article.published_at }
+    published_ats.should == published_ats.sort.reverse
+  end
+
+  specify 'published should merge options' do
+    published_ats = Article.published(:order => [:published_at]).map{ |article| article.published_at }
+    published_ats.should == published_ats.sort
+  end
+
+  specify 'drafts should only return unpublished articles' do
+    Article.drafts.should.be.all{ |article| article.draft? }
+  end
+
+  specify 'drafts should be ordered by created_at desc' do
+    created_ats = Article.drafts.map{ |article| article.created_at }
+    created_ats.should == created_ats.sort.reverse
+  end
+
+  specify 'drafts should merge options' do
+    created_ats = Article.drafts(:order => [:created_at]).map{ |article| article.created_at }
+    created_ats.should == created_ats.sort
+  end
+
+end

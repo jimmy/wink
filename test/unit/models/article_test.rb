@@ -120,4 +120,8 @@ Expectations do
     article.stubs(:published?).returns(true)
   end
 
+  expect Article.to.be.respond_to?(:published)
+
+  expect Article.to.be.respond_to?(:drafts)
+
 end
