@@ -36,4 +36,17 @@ context 'Article' do
     article.created_at.should.be.instance_of(DateTime)
   end
 
+  specify '' do
+    article = Article.new(
+      :slug    => 'some-slug',
+      :title   => 'Some Title'
+    )
+    article.publish
+    article.save
+    article.reload
+    article.should.be.published
+    article.should.not.be.draft
+    article.published_at.class.should == DateTime
+  end
+
 end

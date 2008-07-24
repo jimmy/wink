@@ -96,4 +96,28 @@ Expectations do
     Article.new(:published_at => expectation.expected).published_at
   end
 
+  expect Article.new.to.be.published? do |article|
+    article.publish
+  end
+
+  expect DateTime do
+    article = Article.new
+    article.publish
+    article.published_at.class
+  end
+
+  expect Article.new.to.receive(:published_at=) do |article|
+    article.publish
+  end
+
+  expect Article.new.to.be.draft?
+
+  expect Article.new.to.be.draft? do |article|
+    article.stubs(:published?).returns(false)
+  end
+
+  expect Article.new.to.be.not.draft? do |article|
+    article.stubs(:published?).returns(true)
+  end
+
 end

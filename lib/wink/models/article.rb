@@ -13,4 +13,17 @@ class Article
   property :body,         Text
   property :created_at,   DateTime, :index => true
   property :published_at, DateTime, :index => true
+
+  def publish
+    self.published_at = DateTime.now
+  end
+
+  def published?
+    published_at.is_a?(DateTime)
+  end
+
+  def draft?
+    ! published?
+  end
+
 end
