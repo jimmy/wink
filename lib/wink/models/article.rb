@@ -14,6 +14,9 @@ class Article
   property :created_at,   DateTime, :index => true
   property :published_at, DateTime, :index => true
 
+  has n, :comments,
+    :order => [:created_at.asc]
+
   def publish
     self.published_at = DateTime.now
   end

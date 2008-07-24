@@ -126,4 +126,7 @@ Expectations do
 
   expect Article.to.be.respond_to?(:circa)
 
+  expect [] do
+    Article.new.comments
+  end
 end
