@@ -28,5 +28,12 @@ context 'Article' do
     article.errors[:title].should.include "Title must not be blank"
   end
 
+  specify '' do
+    article = Article.create!(
+      :slug    => 'some-slug',
+      :title   => 'Some Title'
+    )
+    article.created_at.should.be.instance_of(DateTime)
+  end
 
 end
