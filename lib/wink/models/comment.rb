@@ -20,4 +20,17 @@ class Comment
   validates_present :article
 
   belongs_to :article
+
+  def author=(author)
+    attribute_set(:author, author.strip)
+  end
+
+  def author
+    if attribute_get(:author).blank?
+      'Anonymous Coward'
+    else
+      attribute_get(:author)
+    end
+  end
+
 end

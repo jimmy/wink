@@ -47,4 +47,25 @@ context 'Comment' do
     comment.created_at.should.be.instance_of DateTime
   end
 
+  specify '' do
+    article = Article.create!(:slug => 'slug', :title => 'title')
+    comment = Comment.create!(:author => ' ', :body => 'some body', :article => article)
+    comment.reload
+    comment.attribute_get(:author).should == ''
+  end
+
+  specify '' do
+    article = Article.create!(:slug => 'slug', :title => 'title')
+    comment = Comment.create!(:author => ' ', :body => 'some body', :article => article)
+    comment.reload
+    comment.author.should == 'Anonymous Coward'
+  end
+
+  specify '' do
+    article = Article.create!(:slug => 'slug', :title => 'title')
+    comment = Comment.create!(:author => ' Frankie ', :body => 'some body', :article => article)
+    comment.reload
+    comment.author.should == 'Frankie'
+  end
+
 end

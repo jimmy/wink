@@ -33,6 +33,18 @@ Expectations do
     Comment.properties[:author].size
   end
 
+  expect 'Frankie' do
+    Comment.new(:author => '  Frankie  ').attribute_get(:author)
+  end
+
+  expect 'Anonymous Coward' do
+    Comment.new(:author => '').author
+  end
+
+  expect 'Frankie' do
+    Comment.new(:author => 'Frankie').author
+  end
+
   expect String do
     Comment.properties[:ip].type
   end
