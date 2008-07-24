@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'dm-core'
+require 'dm-validations'
 
 class Article
   include DataMapper::Resource

@@ -19,39 +19,14 @@ context 'Article' do
   end
 
   specify '' do
-    article = Article.new(
-      :title => 'Some Title'
-    )
-
-    e = assert_raise(Sqlite3Error){ article.save }
-    e.message.should == 'articles.slug may not be NULL'
+    article = Article.create(:slug => '')
+    article.errors[:slug].should.include "Slug must not be blank"
   end
 
   specify '' do
-    article = Article.new(
-      :slug  => '',
-      :title => 'Some Title'
-    )
-
-    article.save.should == true
+    article = Article.create(:title => '')
+    article.errors[:title].should.include "Title must not be blank"
   end
 
-  specify '' do
-    article = Article.new(
-      :slug => 'some-slug'
-    )
-
-    e = assert_raise(Sqlite3Error){ article.save }
-    e.message.should == 'articles.title may not be NULL'
-  end
-
-  specify '' do
-    article = Article.new(
-      :slug => 'some-slug',
-      :title => ''
-    )
-
-    article.save.should == true
-  end
 
 end

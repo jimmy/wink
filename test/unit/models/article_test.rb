@@ -22,6 +22,10 @@ Expectations do
 
   expect Article.properties[:slug].to.be.not.nullable?
 
+  expect true do
+    Article.properties[:slug].options[:auto_validation]
+  end
+
   expect :unique do
     Article.properties[:slug].index
   end
@@ -35,6 +39,10 @@ Expectations do
   end
 
   expect Article.properties[:title].to.be.not.nullable?
+
+  expect true do
+    Article.properties[:title].options[:auto_validation]
+  end
 
   expect DataMapper::Types::Text do
     Article.properties[:summary].type
