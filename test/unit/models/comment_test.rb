@@ -34,7 +34,8 @@ Expectations do
   end
 
   expect 'Frankie' do
-    Comment.new(:author => '  Frankie  ').attribute_get(:author)
+    comment = Comment.new(:author => '  Frankie  ')
+    comment[:author]
   end
 
   expect 'Anonymous Coward' do

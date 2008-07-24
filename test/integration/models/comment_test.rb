@@ -51,7 +51,7 @@ context 'Comment' do
     article = Article.create!(:slug => 'slug', :title => 'title')
     comment = Comment.create!(:author => ' ', :body => 'some body', :article => article)
     comment.reload
-    comment.attribute_get(:author).should == ''
+    comment[:author].should == ''
   end
 
   specify '' do

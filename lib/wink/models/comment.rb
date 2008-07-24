@@ -22,14 +22,14 @@ class Comment
   belongs_to :article
 
   def author=(author)
-    attribute_set(:author, author.strip)
+    self[:author] = author.strip
   end
 
   def author
-    if attribute_get(:author).blank?
+    if self[:author].blank?
       'Anonymous Coward'
     else
-      attribute_get(:author)
+      self[:author]
     end
   end
 
