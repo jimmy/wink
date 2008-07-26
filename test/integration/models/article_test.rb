@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'test/spec'
-require 'wink/models/article'
-require 'wink/schema'
+require 'wink/models'
 
 context 'Article' do
 
@@ -49,7 +48,20 @@ context 'Article' do
     article.published_at.class.should == DateTime
   end
 
-end
+  specify '' do
+    article = Article.create!(:slug => '1', :title => '1')
+    article.save_with_tag_names('wink')
+    article.tag_names.should == ['wink']
+    article.reload
+    article.tag_names.should == ['wink']
+
+    article.save_with_tag_names('wink', 'sinatra')
+    article.tag_names.sort.should == ['sinatra', 'wink']
+    article.reload
+    article.tag_names.sort.should == ['sinatra', 'wink']
+  end
+
+end # context: Article
 
 context 'Article: custom finders' do
 
@@ -116,4 +128,5 @@ context 'Article: custom finders' do
     created_ats = Article.circa(2008, :order => [:created_at]).map{ |article| article.created_at }
     created_ats.should == created_ats.sort
   end
-end
+
+end # context: Article: custom finders

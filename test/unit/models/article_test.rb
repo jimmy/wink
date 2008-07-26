@@ -129,4 +129,18 @@ Expectations do
   expect [] do
     Article.new.comments
   end
+
+  expect Article.new.to.be.respond_to?(:tags)
+
+  expect %w[sinatra wink] do
+    article = Article.new
+    article.stubs(:tags).returns [
+      stub_everything(:name => 'wink'),
+      stub_everything(:name => 'sinatra'),
+    ]
+    article.tag_names
+  end
+
+  expect Article.new.to.be.respond_to?(:save_with_tag_names)
+
 end
