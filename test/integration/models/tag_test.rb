@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'test/spec'
-require 'wink/models'
-require 'wink/schema'
+require 'wink'
 
 context 'Tag' do
 

@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'test/spec'
-require 'wink/models'
+require 'wink'
 
 context 'Article' do
 

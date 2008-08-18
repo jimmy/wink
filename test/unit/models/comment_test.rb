@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'expectations'
-require 'wink/models/article'
-require 'wink/models/comment'
+require 'wink'
 
 Expectations do
 

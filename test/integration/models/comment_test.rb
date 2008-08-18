@@ -1,8 +1,6 @@
 require 'rubygems'
 require 'test/spec'
-require 'wink/models/article'
-require 'wink/models/comment'
-require 'wink/schema'
+require 'wink'
 
 context 'Comment' do
 

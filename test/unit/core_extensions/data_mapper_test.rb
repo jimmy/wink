@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'expectations'
-require 'wink/core_extensions/data_mapper'
+require 'wink'
 
 Expectations do
 

@@ -1,0 +1,31 @@
+== Known Bugs
+
+  * reset! and reload! don't play together well:
+
+    $ ./bin/console
+    irb(main):001:0> reset!
+    => #<Set: {ArticleTag, Article, Comment, Tag}>
+    irb(main):002:0> reload!
+    => true
+    irb(main):003:0> reset!
+    Sqlite3Error: near ")": syntax error
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/adapters/data_objects_adapter.rb:89:in `execute_non_query'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/adapters/data_objects_adapter.rb:89:in `execute'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/adapters/data_objects_adapter.rb:168:in `with_connection'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/adapters/data_objects_adapter.rb:87:in `execute'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/adapters/data_objects_adapter.rb:452:in `create_model_storage'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/auto_migrations.rb:44:in `auto_migrate!'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/repository.rb:44:in `scope'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core.rb:184:in `repository'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/model.rb:74:in `repository'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/auto_migrations.rb:41:in `auto_migrate!'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/auto_migrations.rb:13:in `auto_migrate'
+      from /usr/local/lib/ruby/1.8/set.rb:189:in `each'
+      from /usr/local/lib/ruby/1.8/set.rb:189:in `each_key'
+      from /usr/local/lib/ruby/1.8/set.rb:189:in `each'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/auto_migrations.rb:12:in `auto_migrate'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core/repository.rb:131:in `auto_migrate!'
+      from /usr/local/lib/ruby/gems/1.8/gems/dm-core-0.9.2/lib/dm-core.rb:203:in `auto_migrate!'
+      from ./lib/wink/schema.rb:7:in `reset!'
+      from ./lib/wink/console.rb:6:in `reset!'
+      from (irb):3irb(main):004:0>
