@@ -1,6 +1,3 @@
-require 'rubygems'
-require 'dm-core'
-
 # TODO: Deal with fields that are too long.  Consider automatically trimming
 # the field or letting the caller deal with the error.  If we want to
 # automatically trim the field, perhaps we should extend DataMapper to do it.

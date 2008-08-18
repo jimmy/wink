@@ -1,8 +1,3 @@
-require 'rubygems'
-require 'dm-core'
-require 'dm-validations'
-require 'dm-timestamps'
-
 class Article
   include DataMapper::Resource
 
